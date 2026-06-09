@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON to TypeScript — Free Online Converter</title>
+  <meta name="description" content="Convert JSON to TypeScript interfaces instantly. Free, no signup, works in browser.">
+  <meta name="keywords" content="JSON to TypeScript, JSON to TS, TypeScript interface generator, JSON converter, online tool">
+  <link rel="canonical" href="https://json-to-ts.pages.dev/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JSON to TypeScript — Free Online Converter">
+  <meta property="og:description" content="Convert JSON to TypeScript interfaces instantly. Free, no signup, works in browser.">
+  <meta property="og:url" content="https://json-to-ts.pages.dev/">
+  <meta property="og:site_name" content="JSON to TypeScript Converter">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JSON to TypeScript — Free Online Converter">
+  <meta name="twitter:description" content="Convert JSON to TypeScript interfaces instantly. Free, no signup, works in browser.">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "JSON to TypeScript Converter",
+    "url": "https://json-to-ts.pages.dev/",
+    "description": "Convert JSON to TypeScript interfaces instantly. Free, no signup, works in browser.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires JavaScript"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I convert JSON to TypeScript?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Paste your JSON into the input panel and click Convert. The tool parses the JSON and generates TypeScript interfaces for every nested object automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data sent to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All conversion happens entirely in your browser. Your JSON never leaves your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it handle arrays and nested objects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Arrays of primitives map to TypeScript array types. Arrays of objects generate separate interfaces. Null values become nullable types with the | null union."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117; --card: #161b22; --border: #30363d;
+      --text: #e6edf3; --dim: #8b949e; --green: #238636; --blue: #1f6feb;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+    header {
+      padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: .75rem;
+    }
+    header h1 { font-size: 1.25rem; font-weight: 600; }
+    header h1 span { color: var(--blue); }
+
+    /* Main */
+    main { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    /* Tool section */
+    .tool { display: flex; flex-direction: column; gap: 1rem; }
+    .panels { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: stretch; min-height: 420px; }
+    .panels textarea, .panels .output-wrap {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .875rem; padding: 1rem; resize: none; width: 100%; min-height: 420px;
+    }
+    .panels textarea:focus { outline: 2px solid var(--blue); outline-offset: -2px; }
+    .panels textarea { placeholder-color: var(--dim); }
+    .output-wrap { overflow: auto; white-space: pre; position: relative; }
+    .output-wrap code { font-family: inherit; }
+    .output-wrap .copy-btn {
+      position: absolute; top: .5rem; right: .5rem;
+      background: var(--border); border: none; color: var(--text); border-radius: 4px;
+      padding: .3rem .6rem; font-size: .75rem; cursor: pointer; opacity: .7;
+    }
+    .output-wrap .copy-btn:hover { opacity: 1; }
+    .convert-col { display: flex; align-items: center; }
+    .convert-btn {
+      background: var(--green); color: #fff; border: none; border-radius: 8px;
+      padding: 1rem 2rem; font-size: 1rem; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: opacity .15s;
+    }
+    .convert-btn:hover { opacity: .85; }
+    .convert-btn:active { transform: scale(.97); }
+    .error { color: #f85149; font-size: .875rem; min-height: 1.4rem; margin-top: .25rem; }
+
+    /* Sections */
+    .section { margin-top: 4rem; }
+    .section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .feature {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem;
+    }
+    .feature h3 { font-size: 1.1rem; margin-bottom: .5rem; color: var(--text); }
+    .feature p { color: var(--dim); font-size: .9rem; }
+    .feature .icon { font-size: 1.5rem; margin-bottom: .5rem; }
+
+    .faq { max-width: 720px; margin: 0 auto; }
+    .faq details {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      margin-bottom: .75rem; padding: 1rem 1.25rem;
+    }
+    .faq summary { font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    .faq summary::after { content: '+'; font-size: 1.25rem; color: var(--dim); }
+    .faq details[open] summary::after { content: '−'; }
+    .faq p { margin-top: .75rem; color: var(--dim); font-size: .9rem; }
+
+    /* Footer */
+    footer {
+      margin-top: auto; padding: 2rem; border-top: 1px solid var(--border);
+      text-align: center; color: var(--dim); font-size: .85rem;
+    }
+    footer a { margin: 0 .75rem; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .panels { grid-template-columns: 1fr; min-height: auto; }
+      .convert-col { justify-content: center; padding: .5rem 0; }
+      .convert-btn { width: 100%; }
+      .panels textarea, .panels .output-wrap { min-height: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span>{ }</span> JSON to TypeScript</h1>
+</header>
+
+<main>
+  <section class="tool">
+    <div class="panels">
+      <textarea id="jsonInput" spellcheck="false" placeholder='Paste JSON here, e.g.&#10;{&#10;  "name": "Alice",&#10;  "age": 30,&#10;  "tags": ["dev"]&#10;}'></textarea>
+      <div class="convert-col">
+        <button class="convert-btn" id="convertBtn">Convert →</button>
+      </div>
+      <div class="output-wrap" id="outputWrap">
+        <button class="copy-btn" id="copyBtn">Copy</button>
+        <code id="tsOutput">TypeScript output will appear here…</code>
+      </div>
+    </div>
+    <div class="error" id="error"></div>
+  </section>
+
+  <section class="section" id="features">
+    <h2>Why JSON to TypeScript?</h2>
+    <div class="features">
+      <div class="feature"><div class="icon">⚡</div><h3>Instant</h3><p>Results in milliseconds. No server round-trip — everything runs in your browser.</p></div>
+      <div class="feature"><div class="icon">🆓</div><h3>Free Forever</h3><p>No pricing tiers, no limits. Use it as much as you need.</p></div>
+      <div class="feature"><div class="icon">🔒</div><h3>Private</h3><p>Your data never leaves your device. Zero server-side processing.</p></div>
+      <div class="feature"><div class="icon">🚀</div><h3>No Signup</h3><p>Open the page and start converting. No account required.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq">
+      <details>
+        <summary>How do I convert JSON to TypeScript?</summary>
+        <p>Paste your JSON into the input panel and click Convert. The tool parses the JSON and generates TypeScript interfaces for every nested object automatically.</p>
+      </details>
+      <details>
+        <summary>Is my data sent to a server?</summary>
+        <p>No. All conversion happens entirely in your browser. Your JSON never leaves your device.</p>
+      </details>
+      <details>
+        <summary>Does it handle arrays and nested objects?</summary>
+        <p>Yes. Arrays of primitives map to TypeScript array types. Arrays of objects generate separate interfaces. Null values become nullable types with the <code>| null</code> union.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <a href="https://jsonhero.io" target="_blank" rel="noopener">JSON Hero</a>
+  <a href="https://devtoolbox.co" target="_blank" rel="noopener">DevTool Box</a>
+  <a href="https://github.com/Chesten223/json-to-ts" target="_blank" rel="noopener">GitHub</a>
+  <p style="margin-top:.5rem">&copy; 2026 JSON to TypeScript Converter</p>
+</footer>
+
+<script>
+(function () {
+  const input = document.getElementById('jsonInput');
+  const output = document.getElementById('tsOutput');
+  const btn = document.getElementById('convertBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const errorEl = document.getElementById('error');
+
+  btn.addEventListener('click', convert);
+  copyBtn.addEventListener('click', function () {
+    navigator.clipboard.writeText(output.textContent).then(function () {
+      copyBtn.textContent = 'Copied!';
+      setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1500);
+    });
+  });
+
+  function convert() {
+    errorEl.textContent = '';
+    var raw = input.value.trim();
+    if (!raw) { errorEl.textContent = 'Paste some JSON first.'; return; }
+    var obj;
+    try { obj = JSON.parse(raw); } catch (e) { errorEl.textContent = 'Invalid JSON: ' + e.message; return; }
+    var interfaces = [];
+    var result = generate('Root', obj, interfaces);
+    interfaces.push(result);
+    output.textContent = interfaces.join('\n\n');
+  }
+
+  function tsType(value) {
+    if (value === null) return 'null';
+    if (typeof value === 'string') return 'string';
+    if (typeof value === 'number') return 'number';
+    if (typeof value === 'boolean') return 'boolean';
+    return null;
+  }
+
+  function generate(name, obj, interfaces) {
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) return 'export type ' + name + ' = any[];';
+      var item = obj[0];
+      var prim = tsType(item);
+      if (prim) return 'export type ' + name + ' = ' + prim + '[];';
+      if (item && typeof item === 'object' && !Array.isArray(item)) {
+        var inner = generate(name + 'Item', item, interfaces);
+        interfaces.push(inner);
+        return 'export type ' + name + ' = ' + name + 'Item[];';
+      }
+      return 'export type ' + name + ' = any[];';
+    }
+
+    if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+      var lines = ['export interface ' + name + ' {'];
+      var keys = Object.keys(obj);
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var v = obj[k];
+        var t = tsType(v);
+        if (t) {
+          lines.push('  ' + k + ': ' + t + ';');
+        } else if (v === null) {
+          lines.push('  ' + k + ': unknown | null;');
+        } else if (Array.isArray(v)) {
+          if (v.length === 0) {
+            lines.push('  ' + k + ': any[];');
+          } else {
+            var prim = tsType(v[0]);
+            if (prim) {
+              lines.push('  ' + k + ': ' + prim + '[];');
+            } else if (v[0] && typeof v[0] === 'object' && !Array.isArray(v[0])) {
+              var innerName = capitalize(k) + 'Item';
+              var inner = generate(innerName, v[0], interfaces);
+              interfaces.push(inner);
+              lines.push('  ' + k + ': ' + innerName + '[];');
+            } else {
+              lines.push('  ' + k + ': any[];');
+            }
+          }
+        } else if (typeof v === 'object') {
+          var innerName = capitalize(k);
+          var inner = generate(innerName, v, interfaces);
+          interfaces.push(inner);
+          lines.push('  ' + k + ': ' + innerName + ';');
+        } else {
+          lines.push('  ' + k + ': any;');
+        }
+      }
+      lines.push('}');
+      return lines.join('\n');
+    }
+
+    return 'export type ' + name + ' = any;';
+  }
+
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+})();
+</script>
+</body>
+</html>
